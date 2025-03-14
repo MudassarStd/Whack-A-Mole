@@ -1,0 +1,32 @@
+when move from start game to game screen, need to update game state to :isActive = true
+
+
+if (isActive), launch timer
+
+on each user press on mole, update state :score
+
+on bg press, stop game -> stop timer, show game over screen with score board from state,
+
+display moles periodically at different places
+
+take random position, just compose image for that position not others.
+
+check current position, if matches, compose, other wise skip
+
+create a local state to track changes of mole display randomization
+
+Randomization Flow:
+first enter in list with initial random pos (we could use local state as that pos and update that local state to create recompositions)
+then call randomizer
+randomizer will delay for (n:time) and then raise an event that will update local state pos
+this local state update will cause a recomposition
+
+================= Further ideas for game =======================
+
+can extend grid size based on user input (3x3, 6x6, 9x9)
+
+
+================= Bug ===================
+
+- state in viewmodel could not be updated or read
+- mole is just shifting horizontally in single row
