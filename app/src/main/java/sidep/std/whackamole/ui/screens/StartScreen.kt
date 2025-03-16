@@ -1,6 +1,5 @@
 package sidep.std.whackamole.ui.screens
 
-import android.text.Layout.Alignment
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,20 +12,22 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.traceEventEnd
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import sidep.std.whackamole.R
-import sidep.std.whackamole.game.GameState
+import sidep.std.whackamole.game.Difficulty
+import sidep.std.whackamole.game.GameConfig
 import sidep.std.whackamole.game.GameViewModel
+import sidep.std.whackamole.game.Plain
 import sidep.std.whackamole.ui.navigation.Routes
 
 @Composable
@@ -35,6 +36,9 @@ fun StartScreen(
     navController: NavController,
     viewModel: GameViewModel = viewModel()
 ) {
+    var selectedDifficulty by remember { mutableStateOf(Difficulty.NOOB) }
+    var selectedPlain by remember { mutableStateOf(Plain.SMALL) }
+
     Column(
         verticalArrangement = Arrangement.Center, horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
@@ -46,23 +50,26 @@ fun StartScreen(
         Spacer(Modifier.height(12.dp))
 
         Text("Difficulty Level")
-
-        Row (horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            FilterChip(selected = false, onClick = { } , label = { Text("Nobe") })
-            FilterChip(selected = false, onClick = { } , label = { Text("Pro") })
-            FilterChip(selected = false, onClick = { } , label = { Text("Master") })
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Difficulty.entries.forEach { difficulty ->
+                FilterChip(selected = selectedDifficulty == difficulty, onClick = {
+                    selectedDifficulty = difficulty
+                }, label = { Text(difficulty.title) })
+            }
         }
 
         Text("Plain size")
-
-        Row (horizontalArrangement = Arrangement.spacedBy(8.dp) ){
-            FilterChip(selected = false, onClick = { } , label = { Text("3x3") })
-            FilterChip(selected = false, onClick = { } , label = { Text("6x6") })
-            FilterChip(selected = false, onClick = { } , label = { Text("9x9") })
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Plain.entries.forEach { plain ->
+                FilterChip(selected = selectedPlain == plain, onClick = {
+                    selectedPlain = plain
+                }, label = { Text(plain.title) })
+            }
         }
 
         Button(onClick = {
-            viewModel.updateGameActive(true)
+            viewModel.gameConfig = GameConfig(difficultyLevel = selectedDifficulty, plain = selectedPlain)
+            viewModel.startGame()
             navController.navigate(Routes.GameScreen.route)
         }) { Text("Start Game") }
     }

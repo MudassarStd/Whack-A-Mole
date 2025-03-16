@@ -1,13 +1,8 @@
 package sidep.std.whackamole.game
 
 data class GameState(
-    val isActive: Boolean = true,
+    val isActive: Boolean = false,
     val score: Int = 0,
-    val gridSize: Int = 3,
-    val gameSpeed: GameSpeed = GameSpeed.Nobe
+    val elapsedTime: Int = 0,
+    val molePosition: Int = 0
 )
-
-
-enum class GameSpeed {
-    Nobe, Pro, GrandMaster
-}
