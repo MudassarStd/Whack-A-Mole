@@ -34,7 +34,7 @@ import sidep.std.whackamole.ui.navigation.Routes
 fun StartScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: GameViewModel = viewModel()
+    viewModel: GameViewModel
 ) {
     var selectedDifficulty by remember { mutableStateOf(Difficulty.NOOB) }
     var selectedPlain by remember { mutableStateOf(Plain.SMALL) }
@@ -69,7 +69,7 @@ fun StartScreen(
 
         Button(onClick = {
             viewModel.gameConfig = GameConfig(difficultyLevel = selectedDifficulty, plain = selectedPlain)
-            viewModel.startGame()
+            viewModel.initGame()
             navController.navigate(Routes.GameScreen.route)
         }) { Text("Start Game") }
     }
@@ -79,5 +79,5 @@ fun StartScreen(
 @Preview(showBackground = true)
 @Composable
 private fun StartScreenPreview() {
-    StartScreen(navController = rememberNavController())
+    StartScreen(navController = rememberNavController(), viewModel = GameViewModel())
 }

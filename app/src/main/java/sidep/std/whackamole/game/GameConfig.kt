@@ -10,5 +10,5 @@ enum class Difficulty(val title: String, val gameSpeed: Long) {
 }
 
 enum class Plain(val size: Int, val title: String) {
-    SMALL(3, "Small"), MEDIUM(6, "Medium"), LARGE(9, "Large"), EXTRA_LARGE(12, "Extra-Large")
+    SMALL(3, "Small"), MEDIUM(6, "Medium"), LARGE(9, "Large")
 }

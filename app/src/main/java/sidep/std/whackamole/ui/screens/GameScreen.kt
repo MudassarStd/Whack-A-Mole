@@ -6,9 +6,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -28,9 +32,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -41,19 +47,25 @@ import sidep.std.whackamole.game.GameViewModel
 import sidep.std.whackamole.ui.navigation.Routes
 import kotlin.random.Random
 
-
 @Composable
 fun GameScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: GameViewModel = viewModel()
+    viewModel: GameViewModel
 ) {
     val gameState by viewModel.gameState.collectAsState()
+    val gridSize = viewModel.gameConfig.plain.size * viewModel.gameConfig.plain.size
 
-    LaunchedEffect(gameState.isActive) {
-        if (gameState.isActive) {
-            viewModel.startGame()
-        }
+    val context = LocalContext.current
+
+    // init context
+    LaunchedEffect(Unit) {
+        viewModel.initSound(context)
+    }
+
+    LaunchedEffect(gameState.isActive) // for now, this key is un-effective, should be some kind of game pause/resume key
+    {
+        if (gameState.isActive) { viewModel.runGame() }
     }
 
     Column(
@@ -61,6 +73,14 @@ fun GameScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        Row(modifier = Modifier.padding(16.dp)) {
+            Button(onClick = { if (gameState.isActive) viewModel.resumeGame(false) else viewModel.resumeGame() }) {
+                Text(if (gameState.isActive) "Pause" else "Resume")
+            }
+        }
+
+        Text("Game state now: $gameState")
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             val minutes = gameState.elapsedTime / 60
             val seconds = gameState.elapsedTime % 60
@@ -70,14 +90,25 @@ fun GameScreen(
             Text("Score: ${gameState.score}", fontWeight = FontWeight.Bold)
         }
 
-        LazyVerticalGrid(columns = GridCells.Fixed(viewModel.gameConfig.plain.size)) {
-            items(viewModel.gameConfig.plain.size * viewModel.gameConfig.plain.size) { index ->
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(viewModel.gameConfig.plain.size),
+            modifier = Modifier
+                .weight(1f)
+                .clickable {
+                    viewModel.stopGame()
+                    navController.navigate(Routes.GameOverScreen.route)
+                },
+            contentPadding = PaddingValues(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(gridSize) { index ->
                 if (gameState.molePosition == index) {
-                    Image(
-                        painter = painterResource(R.drawable.mole),
-                        contentDescription = null,
-                        modifier = Modifier.clickable { viewModel.whackMole() }
-                    )
+                Image(
+                    painter = painterResource(R.drawable.mole),
+                    contentDescription = null,
+                    modifier = Modifier.clickable { viewModel.whackMole() }
+                )
                 }
             }
         }
@@ -93,30 +124,9 @@ fun GameScreen(
     }
 }
 
-@Composable
-fun RandomizeMolePosition(time: Long, gridSize: Int, pos: (Int) -> Unit) {
-    LaunchedEffect(true) {
-        while (true) {
-            delay(time)
-            pos(Random.nextInt(9))
-        }
-    }
-}
-
-@Composable
-fun Timer(isActive: Boolean, onTick: () -> Unit) {
-    // fires a coroutine tied to this comp's lifecycle
-    // runs only once, when comp starts
-    LaunchedEffect(Unit) {
-        while (isActive) {
-            delay(1000)
-            onTick()
-        }
-    }
-}
 
 @Preview(showBackground = true)
 @Composable
 private fun PreviewGameScreen() {
-    GameScreen(Modifier.fillMaxSize(), navController = rememberNavController())
+    GameScreen(Modifier.fillMaxSize(), navController = rememberNavController(), GameViewModel())
 }
