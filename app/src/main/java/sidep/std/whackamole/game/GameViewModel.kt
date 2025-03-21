@@ -3,6 +3,7 @@ package sidep.std.whackamole.game
 import android.app.Application
 import android.content.Context
 import android.media.SoundPool
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,10 +28,12 @@ class GameViewModel() : ViewModel() {
         SoundPoolObj.init(context)
     }
 
-    fun initGame() {
-        _gameState.value = GameState(isActive = true)
+    fun initGame(player: String) {
+        _gameState.value = GameState(isActive = true, player = player) // creates a new state of game with isActive = true
     }
 
+
+    // these just update existing state
     fun resumeGame(isActive: Boolean = true) {
         _gameState.value = _gameState.value.copy(isActive = isActive)
     }
@@ -70,12 +73,8 @@ class GameViewModel() : ViewModel() {
         }
     }
 
-    private fun playSound() {
-        SoundPoolObj.playSound()
-    }
-
     fun whackMole() {
-        playSound()
+        SoundPoolObj.playSound()
         if (_gameState.value.molePosition != -1) {
             _gameState.value = _gameState.value.copy(
                 score = _gameState.value.score + 1,
@@ -99,7 +98,6 @@ class GameViewModel() : ViewModel() {
         SoundPoolObj.clean()
     }
 }
-
 
 object SoundPoolObj {
 
