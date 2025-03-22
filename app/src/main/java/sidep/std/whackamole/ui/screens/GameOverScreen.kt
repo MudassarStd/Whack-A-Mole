@@ -113,8 +113,9 @@ fun LeaderBoardScreen(
                 LazyColumn {
                     items(scores) { score ->
                         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-                            Text("Player: ${score.playerName}")
+                            Text(score.playerName)
                             Text("Score: ${score.score}")
+                            Text("Gameplay: ${score.gameplayTime} sec")
                         }
                     }
                 }

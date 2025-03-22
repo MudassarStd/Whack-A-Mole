@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import sidep.std.whackamole.R
 import sidep.std.whackamole.data.local.LeaderBoardScore
+import sidep.std.whackamole.data.local.Player
 import sidep.std.whackamole.data.repository.LeaderBoardRepository
 import kotlin.random.Random
 
@@ -37,6 +38,8 @@ class GameViewModel(
 
     fun initGame(player: String) {
         _gameState.value = GameState(isActive = true, player = player) // creates a new state of game with isActive = true
+        // adding player to list
+        addPlayer(playerName = player)
     }
 
 
@@ -110,7 +113,6 @@ class GameViewModel(
      * Leader board operations
      **/
 
-
     val scores: StateFlow<List<LeaderBoardScore>> = leaderBoardRepository.getAll()
         .stateIn(
             scope = viewModelScope,
@@ -128,6 +130,26 @@ class GameViewModel(
     fun deleteAll() = viewModelScope.launch {
         leaderBoardRepository.deleteAll()
     }
+
+    /**
+     * Player operations
+     **/
+
+    private fun addPlayer(playerName: String) {
+        viewModelScope.launch {
+            leaderBoardRepository.addPlayer(Player(playerName = playerName))
+        }
+    }
+
+    val players: StateFlow<List<Player>> = leaderBoardRepository.getAllPlayers()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    fun deletePlayers() = viewModelScope.launch { leaderBoardRepository.deleteAllPlayers() }
+
 }
 
 object SoundPoolObj {

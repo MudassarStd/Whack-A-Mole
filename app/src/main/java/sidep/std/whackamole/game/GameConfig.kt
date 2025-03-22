@@ -6,7 +6,7 @@ data class GameConfig (
 )
 
 enum class Difficulty(val title: String, val gameSpeed: Long) {
-    NOOB("Noob",2000), PRO("Pro", 1500), MASTER("Master",1000)
+    NOOB("Noob",2000), PRO("Pro", 1500), MASTER("Master",1200)
 }
 
 enum class Plain(val size: Int, val title: String) {
