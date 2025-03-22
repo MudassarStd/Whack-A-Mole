@@ -8,6 +8,7 @@ A simple and classic **Whack-A-Mole** game built entirely using **Jetpack Compos
 ✔️ **Game Timer & Score Tracking** – Keep track of your progress.  
 ✔️ **Pause & Resume Gameplay** – Manage game state efficiently.  
 ✔️ **Sound Effects** – Fun sound effects when tapping the mole.  
+✔️ **Leader Board** – A score board to display highest scores.  
 ✔️ **Jetpack Compose State Management** – Fully declarative UI.  
 
 ## **Tech Stack** 🛠  
