@@ -3,6 +3,7 @@ package sidep.std.whackamole.game
 import android.app.Application
 import android.content.Context
 import android.media.SoundPool
+import android.util.Log
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
@@ -10,13 +11,19 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import sidep.std.whackamole.R
+import sidep.std.whackamole.data.local.LeaderBoardScore
+import sidep.std.whackamole.data.repository.LeaderBoardRepository
 import kotlin.random.Random
 
-class GameViewModel() : ViewModel() {
+class GameViewModel(
+    private val leaderBoardRepository: LeaderBoardRepository
+) : ViewModel() {
     private val _gameState = MutableStateFlow(GameState())
     val gameState: StateFlow<GameState> = _gameState
 
@@ -96,6 +103,30 @@ class GameViewModel() : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         SoundPoolObj.clean()
+    }
+
+
+    /**
+     * Leader board operations
+     **/
+
+
+    val scores: StateFlow<List<LeaderBoardScore>> = leaderBoardRepository.getAll()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+    fun add(leaderBoardScore: LeaderBoardScore) {
+        Log.d("TestingAddOp", "add called")
+        viewModelScope.launch {
+            leaderBoardRepository.add(leaderBoardScore)
+        }
+    }
+
+    fun deleteAll() = viewModelScope.launch {
+        leaderBoardRepository.deleteAll()
     }
 }
 

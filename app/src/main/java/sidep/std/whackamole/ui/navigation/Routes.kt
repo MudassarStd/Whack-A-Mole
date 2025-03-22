@@ -4,4 +4,5 @@ sealed class Routes(val route: String) {
     data object StartGameScreen: Routes("start")
     data object GameOverScreen: Routes("over")
     data object GameScreen: Routes("mainGame")
+    data object LeaderBoardScreen: Routes("leaderBoardScreen")
 }

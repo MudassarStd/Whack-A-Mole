@@ -123,8 +123,8 @@ fun NameDialog(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun StartScreenPreview() {
-    StartScreen(navController = rememberNavController(), viewModel = GameViewModel())
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun StartScreenPreview() {
+//    StartScreen(navController = rememberNavController(), viewModel = GameViewModel())
+//}
