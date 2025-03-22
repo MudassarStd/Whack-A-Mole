@@ -48,10 +48,11 @@ fun WhackAMoleTheme(
 
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
+
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = LightColorScheme,
         typography = Typography,
         content = content
     )

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Whack A Mole</string>
+    <string name="player_name">Enter your name</string>
 </resources>
