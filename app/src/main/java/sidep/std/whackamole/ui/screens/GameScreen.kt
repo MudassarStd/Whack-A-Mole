@@ -83,7 +83,8 @@ fun GameScreen(
                     viewModel.stopGame()
                     viewModel.add(LeaderBoardScore(
                         score = gameState.score,
-                        playerName = gameState.player
+                        playerName = gameState.player,
+                        gameplayTime = gameState.elapsedTime
                     ))
                     navController.navigate(Routes.GameOverScreen.route)
                 },
@@ -116,7 +117,8 @@ fun GameScreen(
                     viewModel.stopGame()
                     viewModel.add(LeaderBoardScore(
                         score = gameState.score,
-                        playerName = gameState.player
+                        playerName = gameState.player,
+                        gameplayTime = gameState.elapsedTime
                     ))
                     navController.navigate(Routes.GameOverScreen.route)
                 }

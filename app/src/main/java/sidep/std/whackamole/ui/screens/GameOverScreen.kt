@@ -87,9 +87,8 @@ fun GameOverScreen(
 
 @Composable
 fun LeaderBoardScreen(
-    viewModel: GameViewModel = koinViewModel()
+    viewModel: GameViewModel
 ) {
-
     val scores by viewModel.scores.collectAsStateWithLifecycle()
 
     Column(
@@ -113,8 +112,9 @@ fun LeaderBoardScreen(
                 LazyColumn {
                     items(scores) { score ->
                         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-                            Text("Player: ${score.playerName}")
+                            Text(score.playerName)
                             Text("Score: ${score.score}")
+                            Text("Gameplay: ${score.gameplayTime} sec")
                         }
                     }
                 }
@@ -128,6 +128,7 @@ fun LeaderBoardScreen(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun GameOverPreview() {

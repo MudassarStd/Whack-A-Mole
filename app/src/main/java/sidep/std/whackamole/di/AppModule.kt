@@ -7,7 +7,7 @@ import sidep.std.whackamole.game.GameViewModel
 import sidep.std.whackamole.ui.screens.ScoreViewModel
 
 val appModule = module {
-    single { LeaderBoardRepository(get()) }
+    single { LeaderBoardRepository(get(), get()) }
 
 //    viewModel { ScoreViewModel(get()) }
     viewModel { GameViewModel(get()) }

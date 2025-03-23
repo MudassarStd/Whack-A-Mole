@@ -18,4 +18,5 @@ val databaseModule = module {
 
     // provide singleton dao instance
     single { get<ScoreDb>().leaderBoardDao() }
+    single { get<ScoreDb>().playerDao() }
 }
