@@ -7,7 +7,7 @@ A simple and classic **Whack-A-Mole** game built entirely using **Jetpack Compos
 ✔️ **Dynamic UI Updates** – Mole position updates dynamically.  
 ✔️ **Game Timer & Score Tracking** – Keep track of your progress.  
 ✔️ **Pause & Resume Gameplay** – Manage game state efficiently.  
-✔️ **Sound Effects** – Fun sound effects when tapping the mole.  
+✔️ **Sound Effects** – Fun sound effects when tapping the mole and game over.  
 ✔️ **Leader Board** – A score board to display highest scores.  
 ✔️ **Jetpack Compose State Management** – Fully declarative UI.  
 
@@ -19,13 +19,23 @@ A simple and classic **Whack-A-Mole** game built entirely using **Jetpack Compos
 - **SoundPool API** – Lightweight sound effects for better experience.  
 
 ## **Screenshots** 📸  
-*(Add gameplay screenshots here!)*  
+### Home Screen
+![Home Screen](screenshots/whack-home.jpg)
+
+### Add/Select Player 
+![Game Screen](screenshots/whack-player.jpg)
+
+### GamePlay
+![Leaderboard](screenshots/whack-game.jpg)
+
+### Score
+![Leaderboard](screenshots/whack-score.jpg)
+
+### Leaderboard
+![Leaderboard](screenshots/whack-leader.jpg)
 
 ## **How to Run the Project** 🏃‍♂️  
 1. Clone the repository:  
-   ```bash
-   git clone https://github.com/mudassarstd/whack-a-mole-compose.git
-   ```
 2. Open the project in **Android Studio (Latest)**.  
 3. Build & Run on an **Android Emulator or Physical Device**.  
 
@@ -37,12 +47,7 @@ A simple and classic **Whack-A-Mole** game built entirely using **Jetpack Compos
 - **Sound effects** play when you tap the mole.  
 
 ## **To-Do / Future Improvements** 🚧  
-- Add **difficulty levels** (easy, medium, hard).  
-- Implement **leaderboard** and high-score saving.  
 - Improve **animations & UI effects** for better experience.
 
 ## **Contributing** 🤝  
 Anyone learning compose is welcome. Feel free to fork this repository and submit **pull requests** with your creative enhancements to this project.  
-
-## **License** 📜  
-This project is open-source and available under the **MIT License**.  
