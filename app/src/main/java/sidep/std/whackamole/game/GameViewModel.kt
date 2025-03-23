@@ -20,6 +20,7 @@ import sidep.std.whackamole.R
 import sidep.std.whackamole.data.local.LeaderBoardScore
 import sidep.std.whackamole.data.local.Player
 import sidep.std.whackamole.data.repository.LeaderBoardRepository
+import sidep.std.whackamole.util.SoundPoolHelper
 import kotlin.random.Random
 
 class GameViewModel(
@@ -33,7 +34,7 @@ class GameViewModel(
     private var gameJob: Job? = null
 
     fun initSound(context: Context) {
-        SoundPoolObj.init(context)
+        SoundPoolHelper.init(context)
     }
 
     fun initGame(player: String) {
@@ -41,7 +42,6 @@ class GameViewModel(
         // adding player to list
         addPlayer(playerName = player)
     }
-
 
     // these just update existing state
     fun resumeGame(isActive: Boolean = true) {
@@ -57,7 +57,7 @@ class GameViewModel(
         gameJob = viewModelScope.launch {
             // structured concurrency, launching 2 coroutines inside a parent scope
             launch {
-                gameState.collectLatest { state ->
+                gameState.collect { state ->
                     while (state.isActive) {
                         delay(1000)
                         _gameState.value =
@@ -70,7 +70,7 @@ class GameViewModel(
                 val gridSize = gameConfig.plain.size * gameConfig.plain.size
                 val moleSpeed = gameConfig.difficultyLevel.gameSpeed
 
-                gameState.collectLatest { state ->
+                gameState.collect { state ->
                     while (state.isActive) {
                         _gameState.value = _gameState.value.copy(molePosition = Random.nextInt(gridSize))
                         delay(moleSpeed) // position delay
@@ -84,7 +84,7 @@ class GameViewModel(
     }
 
     fun whackMole() {
-        SoundPoolObj.playSound()
+        SoundPoolHelper.playTapSound()
         if (_gameState.value.molePosition != -1) {
             _gameState.value = _gameState.value.copy(
                 score = _gameState.value.score + 1,
@@ -94,6 +94,7 @@ class GameViewModel(
     }
 
     fun stopGame() {
+        SoundPoolHelper.playGameOverSound()
         _gameState.value = _gameState.value.copy(isActive = false)
         gameJob?.cancel()
     }
@@ -105,10 +106,9 @@ class GameViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        SoundPoolObj.clean()
+        Log.d("TestingViewmodel", "OnCleared")
+        SoundPoolHelper.clean()
     }
-
-
     /**
      * Leader board operations
      **/
@@ -150,28 +150,4 @@ class GameViewModel(
 
     fun deletePlayers() = viewModelScope.launch { leaderBoardRepository.deleteAllPlayers() }
 
-}
-
-object SoundPoolObj {
-
-    private var soundPool: SoundPool? = null
-    private var tapSoundId: Int = 0
-    private var isInitialized: Boolean = false
-
-    fun init(context: Context) {
-        if (isInitialized) return
-
-        soundPool = SoundPool.Builder().setMaxStreams(3).build()
-        tapSoundId = soundPool?.load(context, R.raw.screen_tap, 1) ?: 0
-        isInitialized = true
-    }
-
-    fun playSound() {
-        soundPool?.play(tapSoundId, 1f,1f, 0,0,1f)
-    }
-
-    fun clean() {
-        soundPool?.release()
-        soundPool = null
-    }
 }

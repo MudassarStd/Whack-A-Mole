@@ -87,9 +87,8 @@ fun GameOverScreen(
 
 @Composable
 fun LeaderBoardScreen(
-    viewModel: GameViewModel = koinViewModel()
+    viewModel: GameViewModel
 ) {
-
     val scores by viewModel.scores.collectAsStateWithLifecycle()
 
     Column(
@@ -129,6 +128,7 @@ fun LeaderBoardScreen(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun GameOverPreview() {

@@ -22,6 +22,6 @@ fun AppNavigation(modifier: Modifier = Modifier, viewModel: GameViewModel = koin
         composable(Routes.StartGameScreen.route) { StartScreen(navController = navController, viewModel = viewModel) }
         composable(Routes.GameOverScreen.route) { GameOverScreen(navController = navController, viewModel = viewModel) }
         composable(Routes.GameScreen.route) { GameScreen(modifier = Modifier.fillMaxSize().systemBarsPadding(), navController = navController, viewModel = viewModel) }
-        composable(Routes.LeaderBoardScreen.route) { LeaderBoardScreen() }
+        composable(Routes.LeaderBoardScreen.route) { LeaderBoardScreen(viewModel = viewModel) }
     }
 }
